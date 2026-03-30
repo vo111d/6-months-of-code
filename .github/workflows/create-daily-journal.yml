@@ -1,0 +1,54 @@
+name: Create daily journal
+
+on:
+  schedule:
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+
+jobs:
+  create-journal:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get day number
+        id: get_day
+        run: |
+          if [ -d "journal" ]; then
+            COUNT=$(ls journal/day-*.md 2>/dev/null | wc -l)
+          else
+            COUNT=0
+          fi
+          DAY_NUMBER=$((COUNT + 1))
+          echo "day_number=$DAY_NUMBER" >> $GITHUB_OUTPUT
+          echo "date=$(date '+%d.%m.%Y')" >> $GITHUB_OUTPUT
+
+      - name: Create journal file
+        run: |
+          mkdir -p journal
+          cat > journal/day-${{ steps.get_day.outputs.day_number }}.md << 'EOF'
+# День ${{ steps.get_day.outputs.day_number }} — ${{ steps.get_day.outputs.date }}
+
+## Что сделал
+
+
+## Что узнал
+
+
+## Проблемы
+
+
+## Код
+`code/day${{ steps.get_day.outputs.day_number }}.py`
+EOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add journal/
+          git commit -m "Auto: create day ${{ steps.get_day.outputs.day_number }} journal" || echo "No changes to commit"
+          git push
