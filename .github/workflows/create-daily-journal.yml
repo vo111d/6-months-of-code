@@ -11,14 +11,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Get day number
         id: get_day
         run: |
-          if [ -d "journal" ]; then
-            COUNT=$(ls journal/day-*.md 2>/dev/null | wc -l)
+          mkdir -p journal
+          if ls journal/day-*.md 1> /dev/null 2>&1; then
+            COUNT=$(ls journal/day-*.md | wc -l)
           else
             COUNT=0
           fi
@@ -28,27 +28,28 @@ jobs:
 
       - name: Create journal file
         run: |
-          mkdir -p journal
-          cat > journal/day-${{ steps.get_day.outputs.day_number }}.md << 'EOF'
-# День ${{ steps.get_day.outputs.day_number }} — ${{ steps.get_day.outputs.date }}
-
-## Что сделал
-
-
-## Что узнал
-
-
-## Проблемы
-
-
-## Код
-`code/day${{ steps.get_day.outputs.day_number }}.py`
-EOF
+          DAY_NUMBER=${{ steps.get_day.outputs.day_number }}
+          DATE="${{ steps.get_day.outputs.date }}"
+          FILE="journal/day-${DAY_NUMBER}.md"
+          
+          echo "# День ${DAY_NUMBER} — ${DATE}" > "$FILE"
+          echo "" >> "$FILE"
+          echo "## Что сделал" >> "$FILE"
+          echo "" >> "$FILE"
+          echo "" >> "$FILE"
+          echo "## Что узнал" >> "$FILE"
+          echo "" >> "$FILE"
+          echo "" >> "$FILE"
+          echo "## Проблемы" >> "$FILE"
+          echo "" >> "$FILE"
+          echo "" >> "$FILE"
+          echo "## Код" >> "$FILE"
+          echo "code/day${DAY_NUMBER}.py" >> "$FILE"
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add journal/
-          git commit -m "Auto: create day ${{ steps.get_day.outputs.day_number }} journal" || echo "No changes to commit"
+          git diff --cached --quiet || git commit -m "Auto: create day ${{ steps.get_day.outputs.day_number }} journal"
           git push
