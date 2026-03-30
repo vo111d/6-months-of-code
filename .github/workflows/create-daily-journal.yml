@@ -28,23 +28,15 @@ jobs:
 
       - name: Create journal file
         run: |
-          DAY_NUMBER=${{ steps.get_day.outputs.day_number }}
+          DAY_NUMBER="${{ steps.get_day.outputs.day_number }}"
           DATE="${{ steps.get_day.outputs.date }}"
           FILE="journal/day-${DAY_NUMBER}.md"
           
-          echo "# День ${DAY_NUMBER} — ${DATE}" > "$FILE"
-          echo "" >> "$FILE"
-          echo "## Что сделал" >> "$FILE"
-          echo "" >> "$FILE"
-          echo "" >> "$FILE"
-          echo "## Что узнал" >> "$FILE"
-          echo "" >> "$FILE"
-          echo "" >> "$FILE"
-          echo "## Проблемы" >> "$FILE"
-          echo "" >> "$FILE"
-          echo "" >> "$FILE"
-          echo "## Код" >> "$FILE"
-          echo "code/day${DAY_NUMBER}.py" >> "$FILE"
+          printf "# День %s — %s\n\n" "$DAY_NUMBER" "$DATE" > "$FILE"
+          printf "## Что сделал\n\n\n" >> "$FILE"
+          printf "## Что узнал\n\n\n" >> "$FILE"
+          printf "## Проблемы\n\n\n" >> "$FILE"
+          printf "## Код\ncode/day%s.py\n" "$DAY_NUMBER" >> "$FILE"
 
       - name: Commit and push
         run: |
