@@ -12,7 +12,7 @@
 
 ![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=vo111d&theme=radical)
 
-![GitHub Stats](https://github-readme-stats.vercel.app/api?username=vo111d&show_icons=true&theme=radical)
+![Metrics](metrics.svg)
 
 ## 📁 Что здесь
 
