@@ -8,3 +8,5 @@
 | aiogram | Библиотека для ботов | [docs.aiogram.dev](https://docs.aiogram.dev) |
 | openpyxl | Работа с Excel | [openpyxl.readthedocs.io](https://openpyxl.readthedocs.io) |
 | Авито | Поиск клиентов | [avito.ru](https://avito.ru) |
+
+https://chat.deepseek.com/a/chat/s/ef42a50c-cbfc-434d-8520-b7bec47bc7e8
